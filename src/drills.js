@@ -35,13 +35,26 @@ function paginate(pageNumber) {
 function afterDate(daysAgo) {
 	knexInstance
 		.select('*')
-		.from('shopping_list')
+
 		.where(
 			'date_added',
 			'>',
-			knexInstance.raw(`now() - ??::INTERVAL`, daysAgo)
+			knexInstance.raw(`now() - '?? days'::INTERVAL`, daysAgo)
 		)
+		.from('shopping_list')
 		.then(res => console.log(res));
 }
 
-afterDate(10);
+// afterDate(10);
+
+//total cost for each category
+function totalCost() {
+	knexInstance
+		.from('shopping_list')
+		.select('category')
+		.sum('price as total')
+		.groupBy('category')
+		.then(res => console.log(res));
+}
+
+totalCost();
